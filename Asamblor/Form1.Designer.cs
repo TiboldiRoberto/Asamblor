@@ -34,6 +34,8 @@ namespace Asamblor
             this.outputTextBox = new System.Windows.Forms.TextBox();
             this.btnExecute = new System.Windows.Forms.Button();
             this.btnBrowse = new System.Windows.Forms.Button();
+            this.transformTextBox = new System.Windows.Forms.TextBox();
+            this.btnTransform = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // pathTextBox
@@ -58,7 +60,7 @@ namespace Asamblor
             this.outputTextBox.Multiline = true;
             this.outputTextBox.Name = "outputTextBox";
             this.outputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.outputTextBox.Size = new System.Drawing.Size(592, 272);
+            this.outputTextBox.Size = new System.Drawing.Size(330, 272);
             this.outputTextBox.TabIndex = 3;
             // 
             // btnExecute
@@ -83,11 +85,33 @@ namespace Asamblor
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
+            // transformTextBox
+            // 
+            this.transformTextBox.Location = new System.Drawing.Point(485, 135);
+            this.transformTextBox.Multiline = true;
+            this.transformTextBox.Name = "transformTextBox";
+            this.transformTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.transformTextBox.Size = new System.Drawing.Size(300, 272);
+            this.transformTextBox.TabIndex = 6;
+            // 
+            // btnTransform
+            // 
+            this.btnTransform.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTransform.Location = new System.Drawing.Point(687, 57);
+            this.btnTransform.Name = "btnTransform";
+            this.btnTransform.Size = new System.Drawing.Size(98, 25);
+            this.btnTransform.TabIndex = 7;
+            this.btnTransform.Text = "Transform";
+            this.btnTransform.UseVisualStyleBackColor = true;
+            this.btnTransform.Click += new System.EventHandler(this.btnTransform_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(666, 448);
+            this.ClientSize = new System.Drawing.Size(818, 448);
+            this.Controls.Add(this.btnTransform);
+            this.Controls.Add(this.transformTextBox);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnExecute);
             this.Controls.Add(this.outputTextBox);
@@ -107,6 +131,8 @@ namespace Asamblor
         private System.Windows.Forms.TextBox outputTextBox;
         private System.Windows.Forms.Button btnExecute;
         private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.TextBox transformTextBox;
+        private System.Windows.Forms.Button btnTransform;
     }
 }
 

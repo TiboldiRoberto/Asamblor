@@ -1,0 +1,8 @@
+MOV R0, 1
+MOV R1, R0
+MOV R2, (R1)
+MOV R3, 4(R2)
+ADD
+SUB
+XOR
+AND

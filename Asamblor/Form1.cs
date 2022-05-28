@@ -10,29 +10,65 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Asamblor
 {
     public partial class Form1 : Form
     {
-        private static String filename;
+        String fileNameWithPath = "";
+        String filename = "";
+        /* List which will store each token (element) read from ASM file */
+        List<String> asmElements = new List<String>();
+
+        Dictionary<string, byte> registri = new Dictionary<string, byte>()
+            {
+                                    {"R0",  0b0000},
+                                    {"R1",  0b0001},
+                                    {"R2",  0b0010},
+                                    {"R3",  0b0011},
+                                    {"R4",  0b0100},
+                                    {"R5",  0b0101},
+                                    {"R6",  0b0110},
+                                    {"R7",  0b0111},
+                                    {"R8",  0b1000},
+                                    {"R9",  0b1001},
+                                    {"R10", 0b1010},
+                                    {"R11", 0b1011},
+                                    {"R12", 0b1100},
+                                    {"R13", 0b1101},
+                                    {"R14", 0b1110},
+                                    {"R15", 0b1111}
+            };
+
+        Dictionary<string, byte> moduriAdresare = new Dictionary<string, byte>()
+            {
+                { "AIMEDIATA", 00 },
+                { "ADIRECTA", 01 },
+                { "AINDIRECTA", 10 },
+                { "AINDEXATA", 11 },
+            };
+
+        Dictionary<string, Int16> instructiuniClasa1 = new Dictionary<string, Int16>() {
+                    { "MOV", 0b0000000000000000 },
+                    { "ADD", 0b0001000000000000 },
+                    { "SUB", 0b0010000000000000 },
+                    { "CMP", 0b0011000000000000 },
+                    { "AND", 0b0100000000000000 },
+                    { "OR",  0b0101000000000000 },
+                    { "XOR", 0b0111000000000000 }
+            };
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        /* Function used to obtain the ASM filename (*.asm) */
+        // Functie care ne returneaza path-ul 
         private String getFileName(String filter)
         {
             try
-            {
-                /* Local variable used to store the filename */
-                String fileNameWithPath = "";
+            {  
                 /* Instantiate an OpenFileDialog */
                 OpenFileDialog of = new OpenFileDialog();
                 /* Set the filter */
@@ -43,12 +79,9 @@ namespace Asamblor
                 /* Display the Open File dialog */
                 if (of.ShowDialog() == DialogResult.OK)
                 {
-                    /* Get only the filename with full path */
-                    fileNameWithPath = of.FileName;
-                    /* Get only the filename without path */
-                    filename = of.SafeFileName;
+                    fileNameWithPath = of.FileName;         //filename cu path
+                    filename = of.SafeFileName;             //filename fara path
                 }
-                /* Return the filename with complete path */
                 return fileNameWithPath;
             }
             catch (Exception e)
@@ -62,9 +95,6 @@ namespace Asamblor
         {
             try
             {
-                /* String used to be displayed in ASMFileTextBox */
-                String filename = "";
-                /* Reinitialize the Text property of OutputTextBox */
                 outputTextBox.Text = "";
                 /* Take the filename selected by user */
                 filename = getFileName("ASM file for didactical processor(*.asm)|*.asm");
@@ -92,8 +122,7 @@ namespace Asamblor
             {
                 /* local variable used for debugging only */
                 int lineCounter = 0;
-                /* List which will store each token (element) read from ASM file */
-                List<String> asmElements = new List<String>();
+
                 /* Create a parser object used for ASM file
                     REMEMBER: this parser can be used for all kind of text files!!!
                  */
@@ -121,6 +150,9 @@ namespace Asamblor
                             asmElements.Add(s);
                         }
                     }
+
+                    //Adaugam un NL pt a indica ca am trecut la un rand nou
+                    asmElements.Add("NL");
                     /* Counting the number of lines stored in ASM file */
                     lineCounter++;
                 }
@@ -150,6 +182,33 @@ namespace Asamblor
             {
                 MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnTransform_Click(object sender, EventArgs e)
+        {   
+            foreach (String elem in asmElements)
+            {
+                if (instructiuniClasa1.ContainsKey(elem))
+                {
+                    transformTextBox.Text += Convert.ToString(instructiuniClasa1[elem], 2) + Environment.NewLine;
+                }
+                else if (registri.ContainsKey(elem))
+                {
+                    transformTextBox.Text += Convert.ToString(registri[elem], 2) + Environment.NewLine;
+                }
+                else if (elem.Equals("NL"))
+                {
+                    transformTextBox.Text += "Noua instructiune" + Environment.NewLine;
+                }
+                else if (Regex.IsMatch(elem, @"\d"))
+                {
+                    transformTextBox.Text += ("Adresare imediata cu valoare {0}",elem)   + Environment.NewLine;
+                }
+                else
+                {
+                    transformTextBox.Text += elem + "$" + Environment.NewLine;
+                }
+            }    
         }
     }
 }

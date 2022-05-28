@@ -8,3 +8,13 @@ C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiec ASC\Asamblor\Asamblor\obj
 C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiec ASC\Asamblor\Asamblor\obj\Debug\Asamblor.csproj.CoreCompileInputs.cache
 C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiec ASC\Asamblor\Asamblor\obj\Debug\Asamblor.exe
 C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiec ASC\Asamblor\Asamblor\obj\Debug\Asamblor.pdb
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\bin\Debug\Asamblor.exe.config
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\bin\Debug\Asamblor.exe
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\bin\Debug\Asamblor.pdb
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\obj\Debug\Asamblor.csproj.AssemblyReference.cache
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\obj\Debug\Asamblor.Form1.resources
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\obj\Debug\Asamblor.Properties.Resources.resources
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\obj\Debug\Asamblor.csproj.GenerateResource.cache
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\obj\Debug\Asamblor.csproj.CoreCompileInputs.cache
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\obj\Debug\Asamblor.exe
+C:\Users\Roberto\Documents\FACULTATE\An 3\SEM 2\Proiect ASC\Asamblor\Asamblor\obj\Debug\Asamblor.pdb
