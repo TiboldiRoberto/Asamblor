@@ -21,27 +21,27 @@ namespace Asamblor
         /* List which will store each token (element) read from ASM file */
         List<String> asmElements = new List<String>();
 
-        Dictionary<string, byte> registri = new Dictionary<string, byte>()
+        Dictionary<string, Int16> registri = new Dictionary<string, Int16>()
             {
-                                    {"R0",  0b0000},
-                                    {"R1",  0b0001},
-                                    {"R2",  0b0010},
-                                    {"R3",  0b0011},
-                                    {"R4",  0b0100},
-                                    {"R5",  0b0101},
-                                    {"R6",  0b0110},
-                                    {"R7",  0b0111},
-                                    {"R8",  0b1000},
-                                    {"R9",  0b1001},
-                                    {"R10", 0b1010},
-                                    {"R11", 0b1011},
-                                    {"R12", 0b1100},
-                                    {"R13", 0b1101},
-                                    {"R14", 0b1110},
-                                    {"R15", 0b1111}
+                                    {"R0",  0b0000000000000000},
+                                    {"R1",  0b0000000000000001},
+                                    {"R2",  0b0000000000000010},
+                                    {"R3",  0b0000000000000011},
+                                    {"R4",  0b0000000000000100},
+                                    {"R5",  0b0000000000000101},
+                                    {"R6",  0b0000000000000110},
+                                    {"R7",  0b0000000000000111},
+                                    {"R8",  0b0000000000001000},
+                                    {"R9",  0b0000000000001001},
+                                    {"R10", 0b0000000000001010},
+                                    {"R11", 0b0000000000001011},
+                                    {"R12", 0b0000000000001100},
+                                    {"R13", 0b0000000000001101},
+                                    {"R14", 0b0000000000001110},
+                                    {"R15", 0b0000000000001111}
             };
 
-        Dictionary<string, byte> moduriAdresare = new Dictionary<string, byte>()
+        Dictionary<string, Int16> moduriAdresare = new Dictionary<string, Int16>()
             {
                 { "AIMEDIATA", 00 },
                 { "ADIRECTA", 01 },
@@ -128,7 +128,7 @@ namespace Asamblor
                  */
                 TextFieldParser parser = new TextFieldParser(filename);
                 /* Reinitialize the Text property of OutputTextBox */
-                outputTextBox.Text = "";
+                outputTextBox.Clear();
                 /* Define delimiters in ASM file */
                 String[] delimiters = { ":", ",", " ", "(", ")" };
                 /* Specify that the elements in ASM file are delimited by some characters */
@@ -169,14 +169,20 @@ namespace Asamblor
                 else
                 {
                     /* Display every token in OutputTextBox */
+                    outputTextBox.Clear();
                     foreach (String s in asmElements)
                     {
-                        outputTextBox.Text += s + Environment.NewLine;
+                        if (s == "NL")
+                        {
+                            outputTextBox.Text += Environment.NewLine;
+                        }
+                        else {
+                            outputTextBox.Text += s + " ";
+                        }
                     }
                     /* Display an information about the process completion */
                     MessageBox.Show("Parsing is completed!", "Assembler information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-
             }
             catch (Exception exc)
             {
@@ -185,29 +191,68 @@ namespace Asamblor
         }
 
         private void btnTransform_Click(object sender, EventArgs e)
-        {   
+        {
+            transformTextBox.Clear();
+
+            List<List<String>> listaInstructiuni = new List<List<String>>();
+            List<String> instructiuneTemporara = new List<String>();
             foreach (String elem in asmElements)
             {
-                if (instructiuniClasa1.ContainsKey(elem))
+                if (elem != "NL")
                 {
-                    transformTextBox.Text += Convert.ToString(instructiuniClasa1[elem], 2) + Environment.NewLine;
+                    instructiuneTemporara.Add(elem);
                 }
-                else if (registri.ContainsKey(elem))
+                else {
+                    listaInstructiuni.Add(instructiuneTemporara.ToList());
+                    instructiuneTemporara.Clear();
+                }
+            }
+            Int16 varTemp;
+
+            foreach (List<String> instructiune in listaInstructiuni)
+            {
+                varTemp = 0;
+                if (Regex.IsMatch(instructiune[1], @"\b[R]\w+") && Regex.IsMatch(instructiune[2], @"\b[R]\w+"))   //Mod adresare directa 
                 {
-                    transformTextBox.Text += Convert.ToString(registri[elem], 2) + Environment.NewLine;
+                    transformTextBox.Text += "Adresare Directa: " + Environment.NewLine;    
+                    varTemp = (short)(varTemp | (instructiuniClasa1[instructiune[0]]));
+                    varTemp = (short)(varTemp | (moduriAdresare["ADIRECTA"] << 4));         
+                    varTemp = (short)(varTemp | (moduriAdresare["ADIRECTA"] << 10));
+                    varTemp = (short)(varTemp | (registri[instructiune[1]] << 6));
+                    varTemp = (short)(varTemp | registri[instructiune[2]]);
+                    transformTextBox.Text += Convert.ToString(varTemp,2).PadLeft(16, '0') + " Completa" + Environment.NewLine;
                 }
-                else if (elem.Equals("NL"))
+                else if (Regex.IsMatch(instructiune[1], @"\b[R]\w+") && Regex.IsMatch(instructiune[2], @"\d")) // Mod adresare imediata
                 {
-                    transformTextBox.Text += "Noua instructiune" + Environment.NewLine;
+                    transformTextBox.Text += "Adresare Imediata: " + Environment.NewLine;   
+                    varTemp = (short)(varTemp | (instructiuniClasa1[instructiune[0]]));
+                    varTemp = (short)(varTemp | (moduriAdresare["AIMEDIATA"] << 4));         
+                    varTemp = (short)(varTemp | (moduriAdresare["AIMEDIATA"] << 10));
+                    varTemp = (short)(varTemp | (registri[instructiune[1]] << 6));
+                    varTemp = (short)(varTemp | Convert.ToInt16(instructiune[2]));
+                    transformTextBox.Text += Convert.ToString(varTemp, 2).PadLeft(16, '0') + " Completa" + Environment.NewLine;
                 }
-                else if (Regex.IsMatch(elem, @"\d"))
+
+                foreach (String elem in instructiune)
                 {
-                    transformTextBox.Text += ("Adresare imediata cu valoare {0}",elem)   + Environment.NewLine;
+                    if (instructiuniClasa1.ContainsKey(elem))
+                    {
+                        transformTextBox.Text += Convert.ToString(instructiuniClasa1[elem], 2).PadLeft(16, '0') + Environment.NewLine;
+                    }
+                    else if (registri.ContainsKey(elem))
+                    {
+                        transformTextBox.Text += Convert.ToString(registri[elem], 2).PadLeft(16, '0') + Environment.NewLine;
+                    }
+                    else if (Regex.IsMatch(elem, @"\d"))
+                    {
+                        transformTextBox.Text += Convert.ToString(Convert.ToInt16(elem), 2).PadLeft(16, '0') + Environment.NewLine;
+                    }
+                    else
+                    {
+                        transformTextBox.Text += elem + "$" + Environment.NewLine;
+                    }
                 }
-                else
-                {
-                    transformTextBox.Text += elem + "$" + Environment.NewLine;
-                }
+                transformTextBox.Text += "-------------------------------" + Environment.NewLine;
             }    
         }
     }
